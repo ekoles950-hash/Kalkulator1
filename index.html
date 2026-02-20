@@ -1,284 +1,240 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Trash2, Plus, Minus, RefreshCcw, Printer, Calculator, Copy, Share2, Zap, Banknote, X, Clock } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Warung - Basecamp Coffee</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel untuk JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
 
-// DAFTAR MENU LENGKAP 1-11 (Surya Filter diganti Gajah Baru)
-const ITEM_DATA = [
-  { id: 1, name: 'Kopi', price: 4000, category: 'Minuman', color: 'bg-amber-100 border-amber-300 text-amber-900' },
-  { id: 2, name: 'Tron', price: 1000, category: 'Rokok', color: 'bg-blue-100 border-blue-300 text-blue-900' },
-  { id: 3, name: 'Rokok Moca', price: 2000, category: 'Rokok', color: 'bg-gray-100 border-gray-300 text-gray-900' },
-  { id: 4, name: 'Gajah Baru', price: 2000, category: 'Rokok', color: 'bg-red-100 border-red-300 text-red-900' },
-  { id: 5, name: 'Auka', price: 2500, category: 'Minuman', color: 'bg-cyan-100 border-cyan-300 text-cyan-900' },
-  { id: 6, name: 'Klotak', price: 500, category: 'Cemilan', color: 'bg-orange-100 border-orange-300 text-orange-900' },
-  { id: 7, name: 'Opak', price: 1000, category: 'Cemilan', color: 'bg-yellow-100 border-yellow-300 text-yellow-900' },
-  { id: 8, name: 'Mie', price: 6000, category: 'Makanan', color: 'bg-rose-100 border-rose-300 text-rose-900' },
-  { id: 11, name: 'Mie Telor', price: 7500, category: 'Makanan', color: 'bg-emerald-100 border-emerald-300 text-emerald-900' },
-  { id: 9, name: 'Ps', price: 5000, category: 'Lainnya', color: 'bg-purple-100 border-purple-300 text-purple-900' },
-  { id: 10, name: 'Kopi Mentah', price: 2500, category: 'Bahan', color: 'bg-stone-100 border-stone-300 text-stone-900' },
-];
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
 
-const formatRupiah = (number) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(number);
-};
+        const ITEM_DATA = [
+            { id: 1, name: 'Kopi', price: 4000, color: 'bg-amber-100 border-amber-300 text-amber-900' },
+            { id: 2, name: 'Tron', price: 1000, color: 'bg-blue-100 border-blue-300 text-blue-900' },
+            { id: 3, name: 'Rokok Moca', price: 2000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 4, name: 'Gajah Baru', price: 2000, color: 'bg-red-100 border-red-300 text-red-900' },
+            { id: 5, name: 'Auka', price: 2500, color: 'bg-cyan-100 border-cyan-300 text-cyan-900' },
+            { id: 6, name: 'Klotak', price: 500, color: 'bg-orange-100 border-orange-300 text-orange-900' },
+            { id: 7, name: 'Opak', price: 1000, color: 'bg-yellow-100 border-yellow-300 text-yellow-900' },
+            { id: 8, name: 'Mie', price: 6000, color: 'bg-rose-100 border-rose-300 text-rose-900' },
+            { id: 11, name: 'Mie Telor', price: 7500, color: 'bg-emerald-100 border-emerald-300 text-emerald-900' },
+            { id: 9, name: 'Ps', price: 5000, color: 'bg-purple-100 border-purple-300 text-purple-900' },
+            { id: 10, name: 'Kopi Mentah', price: 2500, color: 'bg-stone-100 border-stone-300 text-stone-900' },
+        ];
 
-const generateOrderId = () => Math.floor(1000 + Math.random() * 9000);
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            }).format(number);
+        };
 
-export default function App() {
-  const [cart, setCart] = useState([]);
-  const [payment, setPayment] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateTime, setDateTime] = useState(new Date());
-  const [orderId, setOrderId] = useState(generateOrderId());
-  
-  // State untuk Fitur
-  const [printUrl, setPrintUrl] = useState('#');
-  const [showPsModal, setShowPsModal] = useState(false);
+        function App() {
+            const [cart, setCart] = useState([]);
+            const [payment, setPayment] = useState('');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [orderId, setOrderId] = useState(Math.floor(1000 + Math.random() * 9000));
+            const [showPsModal, setShowPsModal] = useState(false);
 
-  const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-  const change = payment ? parseInt(payment) - total : 0;
+            useEffect(() => {
+                lucide.createIcons();
+            }, [cart, showPsModal]);
 
-  useEffect(() => {
-    const timer = setInterval(() => setDateTime(new Date()), 60000);
-    return () => clearInterval(timer);
-  }, []);
+            const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const change = payment ? parseInt(payment) - total : 0;
 
-  // Update Link Otomatis untuk Printer RawBT
-  useEffect(() => {
-    if (cart.length > 0) {
-        const text = generateReceiptText();
-        const base64Data = btoa(unescape(encodeURIComponent(text)));
-        const url = `intent:base64,${base64Data}#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.editor=text;end;`;
-        setPrintUrl(url);
-    } else {
-        setPrintUrl('#');
-    }
-  }, [cart, payment, dateTime, orderId]);
+            const addToCart = (item, quantity = 1) => {
+                setCart(prev => {
+                    const existing = prev.find(i => i.id === item.id);
+                    if (existing) {
+                        return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + quantity } : i);
+                    }
+                    return [...prev, { ...item, qty: quantity }];
+                });
+            };
 
-  // Fungsi Tambah ke Keranjang
-  const addToCart = (item, quantity = 1) => {
-    setCart(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + quantity } : i);
-      }
-      return [...prev, { ...item, qty: quantity }];
-    });
-  };
+            const handleItemClick = (item) => {
+                if (item.name === 'Ps') {
+                    setShowPsModal(true);
+                } else {
+                    addToCart(item);
+                }
+            };
 
-  // Logic Klik Menu
-  const handleItemClick = (item) => {
-    if (item.name === 'Ps') {
-      setShowPsModal(true);
-    } else {
-      addToCart(item);
-    }
-  };
+            const addPsDuration = (hours) => {
+                const psItem = ITEM_DATA.find(i => i.name === 'Ps');
+                addToCart(psItem, hours);
+                setShowPsModal(false);
+            };
 
-  // Khusus tambah PS dari Modal
-  const addPsDuration = (hours) => {
-    const psItem = ITEM_DATA.find(i => i.name === 'Ps');
-    if (psItem) {
-      addToCart(psItem, hours);
-      setShowPsModal(false);
-    }
-  };
+            const updateQty = (id, delta) => {
+                setCart(prev => prev.map(item => {
+                    if (item.id === id) {
+                        const newQty = item.qty + delta;
+                        return newQty > 0 ? { ...item, qty: newQty } : item;
+                    }
+                    return item;
+                }));
+            };
 
-  const updateQty = (id, delta) => {
-    setCart(prev => {
-      return prev.map(item => {
-        if (item.id === id) {
-          const newQty = item.qty + delta;
-          return newQty > 0 ? { ...item, qty: newQty } : item;
+            const generateReceiptText = () => {
+                const tgl = new Date().toLocaleString('id-ID');
+                let text = `BASECAMP COFFEE\nGrogol, Pejawaran\n${tgl}\nNo: #${orderId}\n--------------------------------\n`;
+                cart.forEach(item => {
+                    text += `${item.name}\n${item.qty} x @ ${formatRupiah(item.price)} = ${formatRupiah(item.qty * item.price)}\n`;
+                });
+                text += `--------------------------------\nTOTAL   : ${formatRupiah(total)}\nTUNAI   : ${formatRupiah(payment || 0)}\nKEMBALI : ${formatRupiah(change)}\n--------------------------------\nTerima Kasih!`;
+                return text;
+            };
+
+            const handleCopy = () => {
+                const text = generateReceiptText();
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                alert("Struk disalin!");
+            };
+
+            const printUrl = useMemo(() => {
+                if (cart.length === 0) return '#';
+                const text = generateReceiptText();
+                const base64Data = btoa(unescape(encodeURIComponent(text)));
+                return `intent:base64,${base64Data}#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.editor=text;end;`;
+            }, [cart, payment]);
+
+            const filteredItems = ITEM_DATA.filter(item => 
+                item.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row h-screen overflow-hidden">
+                    {/* MODAL PS */}
+                    {showPsModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+                                <div className="bg-purple-600 p-4 flex justify-between items-center text-white rounded-t-2xl">
+                                    <h3 className="font-bold flex items-center gap-2"><i data-lucide="clock"></i> Durasi PS</h3>
+                                    <button onClick={() => setShowPsModal(false)}><i data-lucide="x"></i></button>
+                                </div>
+                                <div className="p-4 grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto">
+                                    {[1, 2, 3, 4, 5, 6].map(h => (
+                                        <button key={h} onClick={() => addPsDuration(h)} className="p-4 border-2 border-purple-100 rounded-xl hover:bg-purple-50 text-center">
+                                            <div className="font-bold text-lg">{h} Jam</div>
+                                            <div className="text-sm text-gray-500">{formatRupiah(h * 5000)}</div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MENU (KIRI) */}
+                    <div className="flex-1 p-4 md:p-6 overflow-y-auto pb-64 md:pb-6">
+                        <div className="flex justify-between items-center mb-6">
+                            <h1 className="text-2xl font-bold flex items-center gap-2 text-gray-800">
+                                <i data-lucide="calculator" className="text-blue-600"></i> Basecamp Coffee
+                            </h1>
+                            <input 
+                                type="text" 
+                                placeholder="Cari..." 
+                                className="px-4 py-2 border rounded-lg w-40 md:w-64"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {filteredItems.map(item => (
+                                <button 
+                                    key={item.id} 
+                                    onClick={() => handleItemClick(item)}
+                                    className={`${item.color} p-4 rounded-xl border-2 border-opacity-30 shadow-sm text-left h-28 flex flex-col justify-between active:scale-95 transition-all`}
+                                >
+                                    <span className="font-bold leading-tight">{item.name}</span>
+                                    <span className="font-black text-lg">{formatRupiah(item.price).replace(",00", "")}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* KASIR (KANAN) */}
+                    <div className="w-full md:w-96 bg-white border-t md:border-l shadow-2xl flex flex-col h-[60vh] md:h-full fixed bottom-0 md:relative z-10">
+                        <div className="p-4 border-b flex justify-between bg-gray-50 font-bold">
+                            <span>Keranjang (# {orderId})</span>
+                            <button onClick={() => setCart([])} className="text-red-500 text-sm">Hapus Semua</button>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                            {cart.map(item => (
+                                <div key={item.id} className="flex justify-between items-center border-b pb-2">
+                                    <div>
+                                        <div className="font-bold text-sm">{item.name}</div>
+                                        <div className="text-xs text-gray-500">{formatRupiah(item.price)}</div>
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-gray-100 rounded-lg px-2">
+                                        <button onClick={() => updateQty(item.id, -1)} className="font-bold text-lg">-</button>
+                                        <span className="font-bold">{item.qty}</span>
+                                        <button onClick={() => updateQty(item.id, 1)} className="font-bold text-lg">+</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="p-4 bg-white space-y-3 border-t">
+                            <div className="flex justify-between font-black text-xl">
+                                <span>TOTAL:</span>
+                                <span className="text-blue-600">{formatRupiah(total)}</span>
+                            </div>
+                            <input 
+                                type="number" 
+                                placeholder="Uang Tunai..." 
+                                className="w-full p-3 border-2 rounded-xl text-lg font-bold"
+                                value={payment}
+                                onChange={(e) => setPayment(e.target.value)}
+                            />
+                            <div className="flex justify-between font-bold text-gray-600">
+                                <span>Kembali:</span>
+                                <span>{formatRupiah(change)}</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                <a href={printUrl} className="col-span-2 bg-green-600 text-white p-3 rounded-xl font-bold text-center flex items-center justify-center gap-2">
+                                    <i data-lucide="zap"></i> CETAK STRUK
+                                </a>
+                                <button onClick={handleCopy} className="bg-gray-800 text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                                    <i data-lucide="copy"></i> SALIN
+                                </button>
+                                <button onClick={() => {setCart([]); setPayment(''); setOrderId(Math.floor(1000 + Math.random() * 9000));}} className="bg-blue-600 text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                                    <i data-lucide="refresh-ccw"></i> BARU
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
         }
-        return item;
-      });
-    });
-  };
 
-  const resetTransaction = () => {
-    setCart([]);
-    setPayment('');
-    setOrderId(generateOrderId());
-  };
-
-  const generateReceiptText = () => {
-    const tgl = dateTime.toLocaleString('id-ID');
-    const bayar = payment ? parseInt(payment) : 0;
-    
-    let text = 
-`BASECAMP COFFEE
-Grogol, Pejawaran
-${tgl}
-No: #${orderId}
---------------------------------
-`;
-    cart.forEach(item => {
-      const qtyLabel = item.name === 'Ps' ? 'Jam' : 'x';
-      text += `${item.name}\n${item.qty} ${qtyLabel} @ ${formatRupiah(item.price)} = ${formatRupiah(item.qty * item.price)}\n`;
-    });
-
-    text += `--------------------------------
-TOTAL   : ${formatRupiah(total)}
-TUNAI   : ${formatRupiah(bayar)}
-KEMBALI : ${formatRupiah(change)}
---------------------------------
-Terima Kasih!
-`;
-    return text;
-  };
-
-  const handleShare = async () => {
-    if (cart.length === 0) return;
-    const text = generateReceiptText();
-    if (navigator.share) {
-      try { await navigator.share({ title: 'Struk Belanja', text: text }); } 
-      catch (error) { console.log('Share dibatalkan'); }
-    } else {
-      handleCopy();
-    }
-  };
-
-  const handleCopy = () => {
-    if (cart.length === 0) return;
-    const text = generateReceiptText();
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand('copy');
-    } catch (err) { console.error("Gagal menyalin."); }
-    document.body.removeChild(textArea);
-  };
-
-  const filteredItems = ITEM_DATA.filter(item => 
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-800 relative">
-      
-      {/* MODAL DURASI PS */}
-      {showPsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div className="bg-purple-600 p-4 flex justify-between items-center text-white">
-              <h3 className="font-bold text-lg flex items-center gap-2">
-                <Clock className="w-5 h-5" /> Pilih Durasi PS
-              </h3>
-              <button onClick={() => setShowPsModal(false)} className="p-1 hover:bg-purple-700 rounded-full transition-colors">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            
-            <div className="p-4 grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((hour) => (
-                <button
-                  key={hour}
-                  onClick={() => addPsDuration(hour)}
-                  className="flex flex-col items-center justify-center p-3 border-2 border-purple-100 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all active:scale-95"
-                >
-                  <span className="text-xl font-bold text-purple-900">{hour} Jam</span>
-                  <span className="text-sm text-gray-500 font-medium">{formatRupiah(hour * 5000)}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row h-[100dvh]">
-        {/* PANEL MENU (KIRI) */}
-        <div className="flex-1 p-4 md:p-6 overflow-y-auto">
-          <header className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Calculator className="w-8 h-8 text-blue-600" /> Basecamp Coffee
-              </h1>
-              <p className="text-sm text-gray-500 font-medium">Order: #{orderId}</p>
-            </div>
-            <input type="text" placeholder="Cari menu..." className="w-full sm:w-64 px-4 py-2 border rounded-lg shadow-sm"
-              value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-          </header>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-[75vh] md:pb-0">
-            {filteredItems.map((item) => (
-              <button key={item.id} onClick={() => handleItemClick(item)}
-                className={`flex flex-col justify-between p-4 rounded-xl border-2 transition-all active:scale-95 shadow-sm text-left h-32 ${item.color} border-opacity-50 hover:border-opacity-100`}>
-                <span className="font-bold text-lg leading-tight">{item.name}</span>
-                <div className="mt-2"><span className="font-bold text-xl">{formatRupiah(item.price)}</span></div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* PANEL PEMBAYARAN (KANAN/BAWAH) */}
-        <div className="w-full md:w-96 bg-white shadow-2xl flex flex-col h-[65vh] md:h-screen border-t md:border-l border-gray-200 fixed bottom-0 md:relative z-10">
-          <div className="p-3 border-b bg-gray-50 flex justify-between items-center">
-            <h2 className="font-bold text-lg flex items-center gap-2"><ShoppingCart className="w-5 h-5" /> Keranjang</h2>
-            <button onClick={() => { if(window.confirm('Reset keranjang?')) { resetTransaction(); } }} disabled={cart.length === 0} className="text-red-500 text-sm font-medium flex items-center gap-1"><Trash2 className="w-4 h-4" /> Reset</button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-50/50">
-            {cart.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-gray-400 opacity-60"><ShoppingCart className="w-10 h-10 mb-2" /><p className="text-sm">Belum ada pesanan</p></div>
-            ) : (
-              cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center bg-white border rounded-lg p-2 shadow-sm">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800 text-sm">{item.name}</h4>
-                    <p className="text-xs text-gray-500">{formatRupiah(item.price)}</p>
-                  </div>
-                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg h-8">
-                    <button onClick={() => updateQty(item.id, -1)} className="w-8 h-full hover:bg-gray-200 rounded-l-lg flex justify-center items-center"><Minus className="w-3 h-3" /></button>
-                    <span className="w-8 text-center font-bold text-sm">{item.qty}</span>
-                    <button onClick={() => updateQty(item.id, 1)} className="w-8 h-full hover:bg-gray-200 rounded-r-lg flex justify-center items-center"><Plus className="w-3 h-3" /></button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="p-3 bg-white border-t space-y-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-            <div className="flex justify-between items-center text-lg"><span className="font-semibold text-gray-600">Total:</span><span className="font-bold text-blue-700 text-xl">{formatRupiah(total)}</span></div>
-            
-            <div className="space-y-2">
-                <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                     <button onClick={() => setPayment(total)} className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs font-bold whitespace-nowrap border border-gray-300">Pas</button>
-                    {[5000, 10000, 20000, 50000, 100000].map(amount => (
-                        <button key={amount} onClick={() => setPayment(amount)} className="px-3 py-1 bg-green-100 text-green-800 hover:bg-green-200 rounded text-xs font-bold whitespace-nowrap border border-green-200">{amount / 1000}k</button>
-                    ))}
-                </div>
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Banknote className="h-4 w-4 text-gray-400" /></div>
-                    <input type="number" placeholder="Tunai..." value={payment} onChange={(e) => setPayment(e.target.value)} className="w-full pl-9 pr-3 py-2 border rounded-lg text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </div>
-            </div>
-
-            <div className={`px-3 py-2 rounded-lg flex justify-between items-center text-sm ${change < 0 ? 'bg-red-50 text-red-800' : 'bg-green-50 text-green-900'}`}>
-              <span className="font-semibold">Kembalian:</span><span className="font-bold text-lg">{change < 0 ? "-" + formatRupiah(Math.abs(change)) : formatRupiah(change)}</span>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
-               <a href={printUrl} className={`col-span-2 ${cart.length > 0 ? 'bg-green-600 animate-pulse' : 'bg-gray-300'} text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-md text-sm decoration-transparent text-center`}>
-                 <Zap className="w-5 h-5" /> CETAK STRUK
-               </a>
-               <button onClick={handleShare} disabled={cart.length === 0} className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 text-sm">
-                 <Share2 className="w-4 h-4" /> SHARE
-               </button>
-               <button onClick={handleCopy} disabled={cart.length === 0} className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-300 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 text-sm">
-                 <Copy className="w-4 h-4" /> COPY
-               </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
