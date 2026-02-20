@@ -16,26 +16,30 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; margin: 0; 
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
         const ITEM_DATA = [
-            { id: 1, name: 'Kopi', price: 4000, color: 'bg-amber-100 border-amber-300 text-amber-900' },
-            { id: 2, name: 'Tron', price: 1000, color: 'bg-blue-100 border-blue-300 text-blue-900' },
-            { id: 3, name: 'Rokok Moca', price: 2000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 4, name: 'Gajah Baru', price: 2000, color: 'bg-red-100 border-red-300 text-red-900' },
-            { id: 5, name: 'Auka', price: 2500, color: 'bg-cyan-100 border-cyan-300 text-cyan-900' },
-            { id: 6, name: 'Klotak', price: 500, color: 'bg-orange-100 border-orange-300 text-orange-900' },
-            { id: 7, name: 'Opak', price: 1000, color: 'bg-yellow-100 border-yellow-300 text-yellow-900' },
-            { id: 8, name: 'Mie', price: 6000, color: 'bg-rose-100 border-rose-300 text-rose-900' },
-            { id: 11, name: 'Mie Telor', price: 7500, color: 'bg-emerald-100 border-emerald-300 text-emerald-900' },
-            { id: 9, name: 'Ps', price: 5000, color: 'bg-purple-100 border-purple-300 text-purple-900' },
-            { id: 10, name: 'Kopi Mentah', price: 2500, color: 'bg-stone-100 border-stone-300 text-stone-900' },
+            { id: 1, name: 'Kopi', price: 4000, color: 'bg-amber-100 border-amber-400 text-amber-900' },
+            { id: 2, name: 'Tron', price: 1000, color: 'bg-blue-100 border-blue-400 text-blue-900' },
+            { id: 3, name: 'Rokok Moca', price: 2000, color: 'bg-gray-200 border-gray-400 text-gray-900' },
+            { id: 4, name: 'Gajah Baru', price: 2000, color: 'bg-red-100 border-red-400 text-red-900' },
+            { id: 5, name: 'Auka', price: 2500, color: 'bg-cyan-100 border-cyan-400 text-cyan-900' },
+            { id: 6, name: 'Klotak', price: 500, color: 'bg-orange-100 border-orange-400 text-orange-900' },
+            { id: 7, name: 'Opak', price: 1000, color: 'bg-yellow-100 border-yellow-400 text-yellow-900' },
+            { id: 8, name: 'Mie', price: 6000, color: 'bg-rose-100 border-rose-400 text-rose-900' },
+            { id: 11, name: 'Mie Telor', price: 7500, color: 'bg-emerald-100 border-emerald-400 text-emerald-900' },
+            { id: 9, name: 'Ps', price: 5000, color: 'bg-purple-100 border-purple-400 text-purple-900' },
+            { id: 10, name: 'Kopi Mentah', price: 2500, color: 'bg-stone-200 border-stone-400 text-stone-900' },
         ];
 
         const formatRupiah = (number) => {
@@ -55,7 +59,7 @@
 
             useEffect(() => {
                 lucide.createIcons();
-            }, [cart, showPsModal]);
+            });
 
             const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
             const change = payment ? parseInt(payment) - total : 0;
@@ -112,7 +116,7 @@
                 el.select();
                 document.execCommand('copy');
                 document.body.removeChild(el);
-                alert("Struk disalin!");
+                alert("Struk berhasil disalin!");
             };
 
             const printUrl = useMemo(() => {
@@ -133,14 +137,14 @@
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
                             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
                                 <div className="bg-purple-600 p-4 flex justify-between items-center text-white rounded-t-2xl">
-                                    <h3 className="font-bold flex items-center gap-2"><i data-lucide="clock"></i> Durasi PS</h3>
+                                    <h3 className="font-bold text-xl flex items-center gap-2"><i data-lucide="clock"></i> Pilih Jam PS</h3>
                                     <button onClick={() => setShowPsModal(false)}><i data-lucide="x"></i></button>
                                 </div>
                                 <div className="p-4 grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto">
                                     {[1, 2, 3, 4, 5, 6].map(h => (
-                                        <button key={h} onClick={() => addPsDuration(h)} className="p-4 border-2 border-purple-100 rounded-xl hover:bg-purple-50 text-center">
-                                            <div className="font-bold text-lg">{h} Jam</div>
-                                            <div className="text-sm text-gray-500">{formatRupiah(h * 5000)}</div>
+                                        <button key={h} onClick={() => addPsDuration(h)} className="p-4 border-2 border-purple-200 rounded-xl hover:bg-purple-50 text-center active:scale-95 transition-all">
+                                            <div className="font-black text-2xl text-purple-900">{h} Jam</div>
+                                            <div className="text-md font-bold text-purple-600">{formatRupiah(h * 5000)}</div>
                                         </button>
                                     ))}
                                 </div>
@@ -148,19 +152,25 @@
                         </div>
                     )}
 
-                    {/* MENU (KIRI) */}
-                    <div className="flex-1 p-4 md:p-6 overflow-y-auto pb-64 md:pb-6">
-                        <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-2xl font-bold flex items-center gap-2 text-gray-800">
-                                <i data-lucide="calculator" className="text-blue-600"></i> Basecamp Coffee
-                            </h1>
-                            <input 
-                                type="text" 
-                                placeholder="Cari..." 
-                                className="px-4 py-2 border rounded-lg w-40 md:w-64"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
+                    {/* AREA MENU (KIRI) */}
+                    <div className="flex-1 p-4 md:p-6 overflow-y-auto pb-80 md:pb-6 bg-gray-50">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                            <div>
+                                <h1 className="text-3xl font-black flex items-center gap-2 text-gray-900">
+                                    <i data-lucide="calculator" className="text-blue-600 w-8 h-8"></i> BASECAMP
+                                </h1>
+                                <p className="text-gray-500 font-bold">Order ID: #{orderId}</p>
+                            </div>
+                            <div className="relative w-full sm:w-72">
+                                <i data-lucide="search" className="absolute left-3 top-3 w-5 h-5 text-gray-400"></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="Cari menu..." 
+                                    className="w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:border-blue-500 outline-none font-bold shadow-sm"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -168,62 +178,87 @@
                                 <button 
                                     key={item.id} 
                                     onClick={() => handleItemClick(item)}
-                                    className={`${item.color} p-4 rounded-xl border-2 border-opacity-30 shadow-sm text-left h-28 flex flex-col justify-between active:scale-95 transition-all`}
+                                    className={`${item.color} p-4 rounded-2xl border-b-4 shadow-md text-left h-36 flex flex-col justify-between active:translate-y-1 transition-all`}
                                 >
-                                    <span className="font-bold leading-tight">{item.name}</span>
-                                    <span className="font-black text-lg">{formatRupiah(item.price).replace(",00", "")}</span>
+                                    <span className="font-black text-xl leading-tight">{item.name}</span>
+                                    <span className="font-black text-2xl tracking-tighter">{formatRupiah(item.price).replace(",00", "")}</span>
                                 </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* KASIR (KANAN) */}
-                    <div className="w-full md:w-96 bg-white border-t md:border-l shadow-2xl flex flex-col h-[60vh] md:h-full fixed bottom-0 md:relative z-10">
-                        <div className="p-4 border-b flex justify-between bg-gray-50 font-bold">
-                            <span>Keranjang (# {orderId})</span>
-                            <button onClick={() => setCart([])} className="text-red-500 text-sm">Hapus Semua</button>
+                    {/* AREA KASIR (KANAN) */}
+                    <div className="w-full md:w-[450px] bg-white border-t-4 md:border-l-4 border-blue-600 shadow-2xl flex flex-col h-[70vh] md:h-full fixed bottom-0 md:relative z-10">
+                        <div className="p-4 border-b flex justify-between bg-gray-50 items-center">
+                            <span className="font-black text-xl flex items-center gap-2"><i data-lucide="shopping-cart"></i> KERANJANG</span>
+                            <button onClick={() => {if(confirm('Hapus semua?')) setCart([])}} className="bg-red-100 text-red-600 px-3 py-1 rounded-lg font-bold text-sm">RESET</button>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                            {cart.map(item => (
-                                <div key={item.id} className="flex justify-between items-center border-b pb-2">
-                                    <div>
-                                        <div className="font-bold text-sm">{item.name}</div>
-                                        <div className="text-xs text-gray-500">{formatRupiah(item.price)}</div>
-                                    </div>
-                                    <div className="flex items-center gap-3 bg-gray-100 rounded-lg px-2">
-                                        <button onClick={() => updateQty(item.id, -1)} className="font-bold text-lg">-</button>
-                                        <span className="font-bold">{item.qty}</span>
-                                        <button onClick={() => updateQty(item.id, 1)} className="font-bold text-lg">+</button>
-                                    </div>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
+                            {cart.length === 0 ? (
+                                <div className="h-full flex flex-col items-center justify-center text-gray-300">
+                                    <i data-lucide="package-open" className="w-16 h-16 mb-2"></i>
+                                    <p className="font-bold">Belum ada pesanan</p>
                                 </div>
-                            ))}
+                            ) : (
+                                cart.map(item => (
+                                    <div key={item.id} className="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+                                        <div className="flex-1">
+                                            <div className="font-black text-lg text-gray-800">{item.name}</div>
+                                            <div className="text-sm font-bold text-gray-500">{formatRupiah(item.price)}</div>
+                                        </div>
+                                        <div className="flex items-center gap-4 bg-white border-2 border-gray-200 rounded-xl px-2 py-1">
+                                            <button onClick={() => updateQty(item.id, -1)} className="font-black text-2xl text-red-500 w-8">-</button>
+                                            <span className="font-black text-xl w-6 text-center">{item.qty}</span>
+                                            <button onClick={() => updateQty(item.id, 1)} className="font-black text-2xl text-green-500 w-8">+</button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
 
-                        <div className="p-4 bg-white space-y-3 border-t">
-                            <div className="flex justify-between font-black text-xl">
-                                <span>TOTAL:</span>
-                                <span className="text-blue-600">{formatRupiah(total)}</span>
+                        <div className="p-4 bg-white space-y-4 border-t-2 border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+                            <div className="flex justify-between items-end">
+                                <span className="font-bold text-gray-500 text-lg">TOTAL BAYAR:</span>
+                                <span className="font-black text-4xl text-blue-700">{formatRupiah(total)}</span>
                             </div>
-                            <input 
-                                type="number" 
-                                placeholder="Uang Tunai..." 
-                                className="w-full p-3 border-2 rounded-xl text-lg font-bold"
-                                value={payment}
-                                onChange={(e) => setPayment(e.target.value)}
-                            />
-                            <div className="flex justify-between font-bold text-gray-600">
-                                <span>Kembali:</span>
-                                <span>{formatRupiah(change)}</span>
+
+                            <div className="space-y-2">
+                                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                                    <button onClick={() => setPayment(total)} className="px-4 py-2 bg-blue-100 text-blue-700 border-2 border-blue-200 rounded-xl font-black text-lg whitespace-nowrap active:bg-blue-200">PAS</button>
+                                    {[5000, 10000, 20000, 50000, 100000].map(amt => (
+                                        <button key={amt} onClick={() => setPayment(amt)} className="px-4 py-2 bg-green-100 text-green-700 border-2 border-green-200 rounded-xl font-black text-lg whitespace-nowrap active:bg-green-200">
+                                            {amt/1000}k
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="relative">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-2xl text-gray-400">Rp</span>
+                                    <input 
+                                        type="number" 
+                                        placeholder="Tunai..." 
+                                        className="w-full pl-14 pr-4 py-4 border-4 border-gray-200 rounded-2xl text-3xl font-black text-gray-800 focus:border-blue-500 outline-none"
+                                        value={payment}
+                                        onChange={(e) => setPayment(e.target.value)}
+                                    />
+                                </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-2">
-                                <a href={printUrl} className="col-span-2 bg-green-600 text-white p-3 rounded-xl font-bold text-center flex items-center justify-center gap-2">
+
+                            <div className={`flex justify-between items-center p-3 rounded-2xl ${change < 0 ? 'bg-red-50' : 'bg-green-50'}`}>
+                                <span className="font-bold text-gray-600">Kembalian:</span>
+                                <span className={`font-black text-3xl ${change < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                    {formatRupiah(change)}
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <a href={printUrl} className={`col-span-2 ${cart.length > 0 ? 'bg-green-600' : 'bg-gray-300'} text-white py-4 rounded-2xl font-black text-xl flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all`}>
                                     <i data-lucide="zap"></i> CETAK STRUK
                                 </a>
-                                <button onClick={handleCopy} className="bg-gray-800 text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                                <button onClick={handleCopy} disabled={cart.length === 0} className="bg-gray-800 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 active:bg-black disabled:opacity-50">
                                     <i data-lucide="copy"></i> SALIN
                                 </button>
-                                <button onClick={() => {setCart([]); setPayment(''); setOrderId(Math.floor(1000 + Math.random() * 9000));}} className="bg-blue-600 text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2">
+                                <button onClick={() => {if(confirm('Transaksi baru?')){setCart([]); setPayment(''); setOrderId(Math.floor(1000 + Math.random() * 9000))}}} className="bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 active:bg-blue-800">
                                     <i data-lucide="refresh-ccw"></i> BARU
                                 </button>
                             </div>
