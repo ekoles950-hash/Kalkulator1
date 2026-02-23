@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Warung - Basecamp Coffee</title>
+    <title>Kalkulator Warung Jumbo - Basecamp Coffee</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & ReactDOM -->
@@ -14,32 +14,43 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Menghilangkan panah di input number */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; margin: 0; 
         }
+
+        .jumbo-shadow {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-200">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
         const ITEM_DATA = [
-            { id: 1, name: 'Kopi', price: 4000, color: 'bg-amber-100 border-amber-400 text-amber-900' },
-            { id: 2, name: 'Tron', price: 1000, color: 'bg-blue-100 border-blue-400 text-blue-900' },
-            { id: 3, name: 'Rokok Moca', price: 2000, color: 'bg-gray-200 border-gray-400 text-gray-900' },
-            { id: 4, name: 'Gajah Baru', price: 2000, color: 'bg-red-100 border-red-400 text-red-900' },
-            { id: 5, name: 'Auka', price: 2500, color: 'bg-cyan-100 border-cyan-400 text-cyan-900' },
-            { id: 6, name: 'Klotak', price: 500, color: 'bg-orange-100 border-orange-400 text-orange-900' },
-            { id: 7, name: 'Opak', price: 1000, color: 'bg-yellow-100 border-yellow-400 text-yellow-900' },
-            { id: 8, name: 'Mie', price: 6000, color: 'bg-rose-100 border-rose-400 text-rose-900' },
-            { id: 11, name: 'Mie Telor', price: 7500, color: 'bg-emerald-100 border-emerald-400 text-emerald-900' },
-            { id: 9, name: 'Ps', price: 5000, color: 'bg-purple-100 border-purple-400 text-purple-900' },
-            { id: 10, name: 'Kopi Mentah', price: 2500, color: 'bg-stone-200 border-stone-400 text-stone-900' },
+            { id: 1, name: 'Kopi', price: 4000, color: 'bg-amber-100 border-amber-500 text-amber-900' },
+            { id: 2, name: 'Tron', price: 1000, color: 'bg-blue-100 border-blue-500 text-blue-900' },
+            { id: 3, name: 'Rokok Moca', price: 2000, color: 'bg-zinc-200 border-zinc-500 text-zinc-900' },
+            { id: 4, name: 'Gajah Baru', price: 2000, color: 'bg-red-100 border-red-500 text-red-900' },
+            { id: 5, name: 'Auka', price: 2500, color: 'bg-cyan-100 border-cyan-500 text-cyan-900' },
+            { id: 6, name: 'Klotak', price: 500, color: 'bg-orange-100 border-orange-500 text-orange-900' },
+            { id: 7, name: 'Opak', price: 1000, color: 'bg-yellow-100 border-yellow-500 text-yellow-900' },
+            { id: 8, name: 'Mie', price: 6000, color: 'bg-rose-100 border-rose-500 text-rose-900' },
+            { id: 11, name: 'Mie Telor', price: 7500, color: 'bg-emerald-100 border-emerald-500 text-emerald-900' },
+            { id: 9, name: 'Ps', price: 5000, color: 'bg-purple-100 border-purple-500 text-purple-900' },
+            { id: 10, name: 'Kopi Mentah', price: 2500, color: 'bg-stone-300 border-stone-600 text-stone-900' },
         ];
 
         const formatRupiah = (number) => {
@@ -131,20 +142,21 @@
             );
 
             return (
-                <div className="min-h-screen flex flex-col md:flex-row h-screen overflow-hidden">
-                    {/* MODAL PS */}
+                <div className="min-h-screen flex flex-col md:flex-row h-screen overflow-hidden bg-zinc-200">
+                    
+                    {/* MODAL PS JUMBO */}
                     {showPsModal && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
-                                <div className="bg-purple-600 p-4 flex justify-between items-center text-white rounded-t-2xl">
-                                    <h3 className="font-bold text-xl flex items-center gap-2"><i data-lucide="clock"></i> Pilih Jam PS</h3>
-                                    <button onClick={() => setShowPsModal(false)}><i data-lucide="x"></i></button>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+                            <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-xl overflow-hidden">
+                                <div className="bg-purple-700 p-8 flex justify-between items-center text-white">
+                                    <h3 className="font-black text-3xl flex items-center gap-4"><i data-lucide="clock" className="w-10 h-10"></i> DURASI PS</h3>
+                                    <button onClick={() => setShowPsModal(false)} className="bg-white/20 p-2 rounded-full"><i data-lucide="x" className="w-8 h-8"></i></button>
                                 </div>
-                                <div className="p-4 grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto">
-                                    {[1, 2, 3, 4, 5, 6].map(h => (
-                                        <button key={h} onClick={() => addPsDuration(h)} className="p-4 border-2 border-purple-200 rounded-xl hover:bg-purple-50 text-center active:scale-95 transition-all">
-                                            <div className="font-black text-2xl text-purple-900">{h} Jam</div>
-                                            <div className="text-md font-bold text-purple-600">{formatRupiah(h * 5000)}</div>
+                                <div className="p-8 grid grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto">
+                                    {[1, 2, 3, 4, 5, 6, 7, 8].map(h => (
+                                        <button key={h} onClick={() => addPsDuration(h)} className="p-8 border-4 border-purple-100 rounded-[2rem] hover:bg-purple-50 hover:border-purple-500 transition-all active:scale-95 group">
+                                            <div className="font-black text-5xl text-purple-900 group-hover:scale-110 transition-transform">{h} JAM</div>
+                                            <div className="text-2xl font-bold text-purple-600 mt-2">{formatRupiah(h * 5000)}</div>
                                         </button>
                                     ))}
                                 </div>
@@ -153,113 +165,114 @@
                     )}
 
                     {/* AREA MENU (KIRI) */}
-                    <div className="flex-1 p-4 md:p-6 overflow-y-auto pb-80 md:pb-6 bg-gray-50">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <div className="flex-1 p-6 md:p-10 overflow-y-auto pb-[80vh] md:pb-10">
+                        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-10 gap-6">
                             <div>
-                                <h1 className="text-3xl font-black flex items-center gap-2 text-gray-900">
-                                    <i data-lucide="calculator" className="text-blue-600 w-8 h-8"></i> BASECAMP
+                                <h1 className="text-6xl font-[900] tracking-tighter text-gray-900 flex items-center gap-4">
+                                    <i data-lucide="calculator" className="text-blue-600 w-16 h-16"></i> BASECAMP
                                 </h1>
-                                <p className="text-gray-500 font-bold">Order ID: #{orderId}</p>
+                                <p className="text-2xl text-gray-500 font-black mt-1">ID ORDER: #{orderId}</p>
                             </div>
-                            <div className="relative w-full sm:w-72">
-                                <i data-lucide="search" className="absolute left-3 top-3 w-5 h-5 text-gray-400"></i>
+                            <div className="relative w-full xl:w-[400px]">
+                                <i data-lucide="search" className="absolute left-6 top-1/2 -translate-y-1/2 w-8 h-8 text-gray-400"></i>
                                 <input 
                                     type="text" 
-                                    placeholder="Cari menu..." 
-                                    className="w-full pl-10 pr-4 py-3 border-2 rounded-xl focus:border-blue-500 outline-none font-bold shadow-sm"
+                                    placeholder="CARI MENU..." 
+                                    className="w-full pl-16 pr-8 py-6 border-4 border-white bg-white rounded-3xl text-3xl font-black shadow-xl focus:border-blue-500 outline-none transition-all"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                             {filteredItems.map(item => (
                                 <button 
                                     key={item.id} 
                                     onClick={() => handleItemClick(item)}
-                                    className={`${item.color} p-4 rounded-2xl border-b-4 shadow-md text-left h-36 flex flex-col justify-between active:translate-y-1 transition-all`}
+                                    className={`${item.color} p-8 rounded-[2.5rem] border-b-[12px] shadow-xl text-left h-52 flex flex-col justify-between active:translate-y-2 active:border-b-4 transition-all hover:scale-[1.02]`}
                                 >
-                                    <span className="font-black text-xl leading-tight">{item.name}</span>
-                                    <span className="font-black text-2xl tracking-tighter">{formatRupiah(item.price).replace(",00", "")}</span>
+                                    <span className="font-black text-3xl leading-tight uppercase tracking-tighter">{item.name}</span>
+                                    <span className="font-black text-4xl tracking-tighter">{formatRupiah(item.price).replace(",00", "")}</span>
                                 </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* AREA KASIR (KANAN) */}
-                    <div className="w-full md:w-[450px] bg-white border-t-4 md:border-l-4 border-blue-600 shadow-2xl flex flex-col h-[70vh] md:h-full fixed bottom-0 md:relative z-10">
-                        <div className="p-4 border-b flex justify-between bg-gray-50 items-center">
-                            <span className="font-black text-xl flex items-center gap-2"><i data-lucide="shopping-cart"></i> KERANJANG</span>
-                            <button onClick={() => {if(confirm('Hapus semua?')) setCart([])}} className="bg-red-100 text-red-600 px-3 py-1 rounded-lg font-bold text-sm">RESET</button>
+                    {/* AREA KASIR (KANAN) - JUMBO PANEL */}
+                    <div className="w-full md:w-[550px] bg-white border-t-8 md:border-l-8 border-blue-600 shadow-2xl flex flex-col h-[75vh] md:h-full fixed bottom-0 md:relative z-20">
+                        <div className="p-6 border-b-4 border-gray-100 flex justify-between bg-gray-50 items-center">
+                            <span className="font-black text-3xl flex items-center gap-4"><i data-lucide="shopping-cart" className="w-8 h-8"></i> KERANJANG</span>
+                            <button onClick={() => {if(confirm('HAPUS SEMUA PESANAN?')) setCart([])}} className="bg-red-600 text-white px-6 py-3 rounded-2xl font-black text-xl active:bg-red-800">RESET</button>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
+                        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-zinc-50">
                             {cart.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-gray-300">
-                                    <i data-lucide="package-open" className="w-16 h-16 mb-2"></i>
-                                    <p className="font-bold">Belum ada pesanan</p>
+                                    <i data-lucide="shopping-bag" className="w-32 h-32 mb-4 opacity-20"></i>
+                                    <p className="font-black text-2xl uppercase">Kosong</p>
                                 </div>
                             ) : (
                                 cart.map(item => (
-                                    <div key={item.id} className="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200">
+                                    <div key={item.id} className="flex justify-between items-center bg-white p-6 rounded-[2rem] border-4 border-gray-100 shadow-sm">
                                         <div className="flex-1">
-                                            <div className="font-black text-lg text-gray-800">{item.name}</div>
-                                            <div className="text-sm font-bold text-gray-500">{formatRupiah(item.price)}</div>
+                                            <div className="font-black text-3xl text-gray-800 uppercase tracking-tighter">{item.name}</div>
+                                            <div className="text-xl font-bold text-gray-500">{formatRupiah(item.price)}</div>
                                         </div>
-                                        <div className="flex items-center gap-4 bg-white border-2 border-gray-200 rounded-xl px-2 py-1">
-                                            <button onClick={() => updateQty(item.id, -1)} className="font-black text-2xl text-red-500 w-8">-</button>
-                                            <span className="font-black text-xl w-6 text-center">{item.qty}</span>
-                                            <button onClick={() => updateQty(item.id, 1)} className="font-black text-2xl text-green-500 w-8">+</button>
+                                        <div className="flex items-center gap-6 bg-gray-100 border-4 border-gray-200 rounded-3xl px-4 py-2">
+                                            <button onClick={() => updateQty(item.id, -1)} className="font-black text-5xl text-red-600 w-12 active:scale-125 transition-transform">-</button>
+                                            <span className="font-black text-4xl w-12 text-center text-blue-700">{item.qty}</span>
+                                            <button onClick={() => updateQty(item.id, 1)} className="font-black text-5xl text-green-600 w-12 active:scale-125 transition-transform">+</button>
                                         </div>
                                     </div>
                                 ))
                             )}
                         </div>
 
-                        <div className="p-4 bg-white space-y-4 border-t-2 border-gray-100 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-                            <div className="flex justify-between items-end">
-                                <span className="font-bold text-gray-500 text-lg">TOTAL BAYAR:</span>
-                                <span className="font-black text-4xl text-blue-700">{formatRupiah(total)}</span>
+                        {/* PANEL PEMBAYARAN RAKSASA */}
+                        <div className="p-8 bg-white space-y-6 border-t-8 border-gray-100 jumbo-shadow">
+                            <div className="flex justify-between items-center">
+                                <span className="font-black text-gray-400 text-2xl uppercase">Total Bayar:</span>
+                                <span className="font-[1000] text-7xl text-blue-700 tracking-tighter">{formatRupiah(total)}</span>
                             </div>
 
-                            <div className="space-y-2">
-                                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                                    <button onClick={() => setPayment(total)} className="px-4 py-2 bg-blue-100 text-blue-700 border-2 border-blue-200 rounded-xl font-black text-lg whitespace-nowrap active:bg-blue-200">PAS</button>
+                            <div className="space-y-4">
+                                <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+                                    <button onClick={() => setPayment(total)} className="px-8 py-5 bg-blue-700 text-white rounded-2xl font-black text-3xl whitespace-nowrap active:bg-blue-900 shadow-lg">UANG PAS</button>
                                     {[5000, 10000, 20000, 50000, 100000].map(amt => (
-                                        <button key={amt} onClick={() => setPayment(amt)} className="px-4 py-2 bg-green-100 text-green-700 border-2 border-green-200 rounded-xl font-black text-lg whitespace-nowrap active:bg-green-200">
-                                            {amt/1000}k
+                                        <button key={amt} onClick={() => setPayment(amt)} className="px-8 py-5 bg-green-600 text-white rounded-2xl font-black text-3xl whitespace-nowrap active:bg-green-800 shadow-lg">
+                                            {amt/1000}K
                                         </button>
                                     ))}
                                 </div>
                                 <div className="relative">
-                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-2xl text-gray-400">Rp</span>
+                                    <span className="absolute left-8 top-1/2 -translate-y-1/2 font-black text-4xl text-gray-300">Rp</span>
                                     <input 
                                         type="number" 
-                                        placeholder="Tunai..." 
-                                        className="w-full pl-14 pr-4 py-4 border-4 border-gray-200 rounded-2xl text-3xl font-black text-gray-800 focus:border-blue-500 outline-none"
+                                        placeholder="INPUT TUNAI..." 
+                                        className="w-full pl-24 pr-8 py-8 border-8 border-gray-100 bg-gray-50 rounded-[2.5rem] text-6xl font-black text-gray-900 focus:border-blue-600 outline-none transition-all placeholder:text-gray-200"
                                         value={payment}
                                         onChange={(e) => setPayment(e.target.value)}
                                     />
                                 </div>
                             </div>
 
-                            <div className={`flex justify-between items-center p-3 rounded-2xl ${change < 0 ? 'bg-red-50' : 'bg-green-50'}`}>
-                                <span className="font-bold text-gray-600">Kembalian:</span>
-                                <span className={`font-black text-3xl ${change < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                            <div className={`flex justify-between items-center p-6 rounded-[2rem] ${change < 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'} border-4 ${change < 0 ? 'border-red-200' : 'border-green-200'}`}>
+                                <span className="font-black text-2xl uppercase">Kembali:</span>
+                                <span className="font-black text-5xl tracking-tighter">
                                     {formatRupiah(change)}
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
-                                <a href={printUrl} className={`col-span-2 ${cart.length > 0 ? 'bg-green-600' : 'bg-gray-300'} text-white py-4 rounded-2xl font-black text-xl flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all`}>
-                                    <i data-lucide="zap"></i> CETAK STRUK
+                            <div className="grid grid-cols-2 gap-4">
+                                <a href={printUrl} className={`col-span-2 ${cart.length > 0 ? 'bg-green-600' : 'bg-gray-300'} text-white py-8 rounded-[2rem] font-black text-4xl flex items-center justify-center gap-6 shadow-2xl active:scale-95 transition-all text-center decoration-transparent`}>
+                                    <i data-lucide="zap" className="w-12 h-12"></i> CETAK STRUK
                                 </a>
-                                <button onClick={handleCopy} disabled={cart.length === 0} className="bg-gray-800 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 active:bg-black disabled:opacity-50">
-                                    <i data-lucide="copy"></i> SALIN
+                                <button onClick={handleCopy} disabled={cart.length === 0} className="bg-zinc-800 text-white py-6 rounded-[2rem] font-black text-2xl flex items-center justify-center gap-4 active:bg-black disabled:opacity-30">
+                                    <i data-lucide="copy" className="w-8 h-8"></i> SALIN
                                 </button>
-                                <button onClick={() => {if(confirm('Transaksi baru?')){setCart([]); setPayment(''); setOrderId(Math.floor(1000 + Math.random() * 9000))}}} className="bg-blue-600 text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 active:bg-blue-800">
-                                    <i data-lucide="refresh-ccw"></i> BARU
+                                <button onClick={() => {if(confirm('MULAI TRANSAKSI BARU?')){setCart([]); setPayment(''); setOrderId(Math.floor(1000 + Math.random() * 9000))}}} className="bg-blue-600 text-white py-6 rounded-[2rem] font-black text-2xl flex items-center justify-center gap-4 active:bg-blue-800">
+                                    <i data-lucide="refresh-ccw" className="w-8 h-8"></i> BARU
                                 </button>
                             </div>
                         </div>
