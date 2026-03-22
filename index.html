@@ -101,32 +101,39 @@
         </div>
     </div>
 
-    <!-- Footer: Laporan Keuangan Manual ke Telegram -->
-    <div class="bg-slate-800 p-3 shadow-lg z-20 flex flex-col sm:flex-row items-center gap-3">
-        <div class="text-white text-xs font-semibold whitespace-nowrap hidden sm:block">
-            Laporan Manual:
+    <!-- Footer: Laporan Keuangan Manual ke Telegram (DIPERBAIKI) -->
+    <div class="bg-slate-800 p-2.5 pb-4 shadow-[0_-4px_10px_rgba(0,0,0,0.2)] z-20 flex flex-col gap-1.5 w-full">
+        
+        <!-- Teks Permintaan -->
+        <div class="text-amber-300 text-xs font-bold tracking-wide ml-1">
+            Pemasukan hari ini mas hedri!
         </div>
         
-        <div class="flex-1 w-full flex items-center bg-slate-700 rounded-lg overflow-hidden border border-slate-600 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all">
-            <span class="pl-3 pr-2 text-slate-400 font-bold">Rp</span>
-            <input 
-                type="number" 
-                id="inputPemasukan" 
-                placeholder="Masukkan nominal..." 
-                class="w-full bg-transparent text-white p-2 outline-none font-bold text-sm"
-            >
-        </div>
+        <!-- Input & Tombol Bersebelahan -->
+        <div class="flex gap-2 w-full items-center">
+            
+            <div class="flex-1 flex items-center bg-slate-700 rounded-lg overflow-hidden border border-slate-600 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all">
+                <span class="pl-3 pr-2 text-slate-400 font-bold">Rp</span>
+                <input 
+                    type="number" 
+                    id="inputPemasukan" 
+                    placeholder="Nominal..." 
+                    class="w-full bg-transparent text-white py-2.5 pr-2 outline-none font-bold text-sm"
+                >
+            </div>
 
-        <button onclick="kirimTelegramManual()" id="btnKirimTelegram" class="w-full sm:w-auto tap-effect bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-blue-600 flex items-center justify-center gap-2 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-            Kirim Laporan
-        </button>
+            <button onclick="kirimTelegramManual()" id="btnKirimTelegram" class="tap-effect bg-blue-500 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md hover:bg-blue-600 flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                Kirim
+            </button>
+
+        </div>
     </div>
 
     <script>
-        // --- KONFIGURASI MENU ---
+        // --- KONFIGURASI MENU (Diupdate sesuai screenshot) ---
         const menuItems = [
             { name: "Kopi", price: 4000, color: "bg-amber-800 text-white" },
             { name: "Tron", price: 1000, color: "bg-blue-600 text-white" },
@@ -155,10 +162,6 @@
             renderMenu();
             updateOrderNoDisplay();
             renderCart();
-            
-            // Format input angka ribuan saat mengetik (opsional tapi bagus untuk UX)
-            // Namun karena input type number tidak dukung koma/titik native dengan mudah,
-            // kita biarkan type number murni agar keypad HP muncul angka saja.
         });
 
         function updateOrderNoDisplay() {
@@ -290,7 +293,7 @@
             }
         }
 
-        // --- LOGIKA RAWBT (Murni Cetak Saja) ---
+        // --- LOGIKA RAWBT ---
         function printRawBT() {
             if (Object.keys(cart).length === 0) {
                 alert("Keranjang masih kosong!");
@@ -343,17 +346,14 @@
             orderNumber++;
             localStorage.setItem('lastOrderNo', orderNumber);
             updateOrderNoDisplay();
-            // Opsional: Hapus komentar di bawah untuk auto-reset keranjang setelah cetak
-            // cart = {}; uangBayar = 0; renderCart(); 
         }
 
-        // --- LOGIKA TELEGRAM (Manual Input) ---
+        // --- LOGIKA TELEGRAM ---
         async function kirimTelegramManual() {
             const inputEl = document.getElementById('inputPemasukan');
             const nominalValue = inputEl.value;
             const btn = document.getElementById('btnKirimTelegram');
 
-            // Validasi Input
             if (!nominalValue || isNaN(nominalValue) || parseInt(nominalValue) <= 0) {
                 alert("Silakan masukkan nominal pemasukan yang valid!");
                 inputEl.focus();
@@ -362,18 +362,15 @@
 
             const nominal = parseInt(nominalValue);
             
-            // Konfirmasi pengiriman
             if(!confirm(`Kirim laporan pemasukan sebesar Rp ${nominal.toLocaleString('id-ID')} ke Telegram?`)){
                 return;
             }
 
-            // Ubah state tombol saat proses loading
             const originalText = btn.innerHTML;
-            btn.innerHTML = `<svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Mengirim...`;
+            btn.innerHTML = `<svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
             btn.disabled = true;
             btn.classList.add("opacity-70", "cursor-not-allowed");
 
-            // Format Pesan
             const waktu = new Date().toLocaleString('id-ID', {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
                 hour: '2-digit', minute: '2-digit'
@@ -386,16 +383,14 @@
 💰 *Nominal:* Rp ${nominal.toLocaleString('id-ID')}
 🕒 *Waktu:* ${waktu}
 
-_Laporan dikirim oleh Admin dari Aplikasi Kasir_`;
+_Laporan dikirim oleh mas hedri!_`;
 
             const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: TELEGRAM_CHAT_ID,
                         text: pesan,
@@ -407,15 +402,14 @@ _Laporan dikirim oleh Admin dari Aplikasi Kasir_`;
 
                 if (data.ok) {
                     alert("✅ Laporan berhasil dikirim ke Telegram!");
-                    inputEl.value = ""; // Kosongkan input setelah berhasil
+                    inputEl.value = ""; 
                 } else {
                     alert("❌ Gagal mengirim laporan: " + data.description);
                 }
             } catch (error) {
                 console.error("Error:", error);
-                alert("❌ Terjadi kesalahan koneksi saat mengirim laporan. Pastikan internet aktif.");
+                alert("❌ Terjadi kesalahan koneksi saat mengirim laporan.");
             } finally {
-                // Kembalikan state tombol ke semula
                 btn.innerHTML = originalText;
                 btn.disabled = false;
                 btn.classList.remove("opacity-70", "cursor-not-allowed");
