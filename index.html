@@ -21,10 +21,9 @@
         }
     </style>
 </head>
-<!-- Mengubah h-screen menjadi fixed inset-0 agar terkunci di layar HP -->
 <body class="fixed inset-0 flex flex-col overflow-hidden text-gray-800 bg-gray-100">
 
-    <!-- Header (shrink-0 agar tidak tertekan) -->
+    <!-- Header -->
     <header class="shrink-0 bg-amber-900 text-white p-2 px-4 shadow-md flex justify-between items-center z-10">
         <div>
             <h1 class="text-lg font-bold">Basecamp Coffee</h1>
@@ -102,12 +101,21 @@
         </div>
     </div>
 
-    <!-- Footer: Laporan Keuangan Manual ke Telegram (shrink-0 agar tidak terpotong) -->
+    <!-- Footer: Laporan Keuangan Manual ke Telegram -->
     <div class="shrink-0 bg-slate-800 p-2 shadow-[0_-4px_10px_rgba(0,0,0,0.2)] z-20 flex flex-col gap-1 w-full safe-area-bottom">
         
-        <!-- Teks Permintaan -->
-        <div class="text-amber-300 text-[11px] font-bold tracking-wide ml-1">
-            Pemasukan hari ini mas hedri!
+        <!-- Baris Pilihan Penjaga & Label Pemasukan -->
+        <div class="flex justify-between items-center ml-1 mr-1">
+            <div class="text-amber-300 text-[11px] font-bold tracking-wide">
+                Pemasukan hari ini!
+            </div>
+            <div class="flex items-center gap-1.5">
+                <span class="text-slate-400 text-[10px] font-semibold">Jaga:</span>
+                <select id="namaPenjaga" class="bg-slate-700 text-white text-[10px] font-bold rounded py-0.5 px-1.5 border border-slate-600 outline-none focus:border-blue-400">
+                    <option value="Mas Hendri">Mas Hendri</option>
+                    <option value="Mas Eko">Mas Eko</option>
+                </select>
+            </div>
         </div>
         
         <!-- Input & Tombol Bersebelahan -->
@@ -177,7 +185,6 @@
                 const btn = document.createElement('button');
                 const colorClass = item.color || 'bg-white text-gray-800 border-gray-300';
                 
-                // Tinggi tombol dikurangi sedikit agar lebih banyak menu terlihat
                 btn.className = `${colorClass} tap-effect relative p-1 rounded-lg shadow-sm hover:shadow flex flex-col items-center justify-center h-16 w-full transition-all border border-transparent hover:brightness-110`;
                 btn.onclick = () => addToCart(item);
                 btn.innerHTML = `
@@ -355,6 +362,7 @@
             const inputEl = document.getElementById('inputPemasukan');
             const nominalValue = inputEl.value;
             const btn = document.getElementById('btnKirimTelegram');
+            const namaPenjaga = document.getElementById('namaPenjaga').value;
 
             if (!nominalValue || isNaN(nominalValue) || parseInt(nominalValue) <= 0) {
                 alert("Silakan masukkan nominal pemasukan yang valid!");
@@ -364,7 +372,7 @@
 
             const nominal = parseInt(nominalValue);
             
-            if(!confirm(`Kirim laporan pemasukan sebesar Rp ${nominal.toLocaleString('id-ID')} ke Telegram?`)){
+            if(!confirm(`Kirim laporan pemasukan sebesar Rp ${nominal.toLocaleString('id-ID')} atas nama ${namaPenjaga} ke Telegram?`)){
                 return;
             }
 
@@ -378,14 +386,16 @@
                 hour: '2-digit', minute: '2-digit'
             });
 
+            // Format Pesan Telegram yang baru (tambah Nama Penjaga)
             const pesan = `
 📊 *LAPORAN PEMASUKAN MANUAL*
 🏠 *Basecamp Coffee*
 
+👤 *Penjaga:* ${namaPenjaga}
 💰 *Nominal:* Rp ${nominal.toLocaleString('id-ID')}
 🕒 *Waktu:* ${waktu}
 
-_Laporan dikirim oleh mas hedri!_`;
+_Laporan dikirim dari Aplikasi Kasir_`;
 
             const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
