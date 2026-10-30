@@ -79,16 +79,16 @@
                     </div>
                 </div>
 
-                <!-- Tombol Aksi (Reset, Cetak, Kirim WA) -->
+                <!-- Tombol Aksi (Reset, Cetak/Bagikan Universal, WhatsApp) -->
                 <div class="grid grid-cols-5 gap-1.5 mt-1.5">
                     <button onclick="resetCart()" class="tap-effect bg-red-100 text-red-700 py-2 rounded-lg font-bold text-[11px] border border-red-200 hover:bg-red-200">
                         Reset
                     </button>
-                    <button onclick="printRawBT()" class="tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex flex-col items-center justify-center">
-                        🖨️ Cetak
+                    <button onclick="shareStrukUniversal()" class="col-span-2 tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex items-center justify-center gap-1">
+                        🖨️ Cetak / Bagikan
                     </button>
-                    <button onclick="shareWhatsApp()" class="col-span-3 tap-effect bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-emerald-700 flex items-center justify-center gap-1">
-                        💬 Kirim ke WhatsApp
+                    <button onclick="shareWhatsApp()" class="col-span-2 tap-effect bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-emerald-700 flex items-center justify-center gap-1">
+                        💬 WhatsApp
                     </button>
                 </div>
             </div>
@@ -451,47 +451,53 @@
             }
         }
 
-        // --- CETAK RAWBT ---
-        function printRawBT() {
+        // --- FITUR CETAK / BAGIKAN UNIVERSAL (ANDROID SHARE SHEET) ---
+        async function shareStrukUniversal() {
             if (Object.keys(cart).length === 0) {
                 alert("Keranjang masih kosong!");
                 return;
             }
 
-            let text = "";
-            text += "[C]<b>" + storeName + "</b>\n";
-            text += "[C]" + storeLocation + "\n";
-            text += "[L]\n";
-            text += "[L]No pesanan: " + orderNumber + "\n";
-            text += "[L]Tanggal: " + new Date().toLocaleDateString('id-ID') + " " + new Date().toLocaleTimeString('id-ID').substring(0,5) + "\n";
-            text += "[C]--------------------------------\n";
+            let text = `=== ${storeName} ===\n`;
+            text += `${storeLocation}\n\n`;
+            text += `No Pesanan: #${orderNumber}\n`;
+            text += `Tanggal: ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID').substring(0,5)}\n`;
+            text += `--------------------------------\n`;
 
             for (let name in cart) {
                 let item = cart[name];
-                text += "[L]" + name + "\n";
-                let qtyPrice = item.qty + " x " + item.price.toLocaleString('id-ID');
-                let subVal = item.subtotal.toLocaleString('id-ID');
-                text += "[L]" + qtyPrice + "[R]" + subVal + "\n";
+                text += `${name} (${item.qty}x @${item.price.toLocaleString('id-ID')}) = Rp ${item.subtotal.toLocaleString('id-ID')}\n`;
             }
 
-            text += "[C]--------------------------------\n";
-            text += "[R]<b>TOTAL    : Rp " + totalBelanja.toLocaleString('id-ID') + "</b>\n";
+            text += `--------------------------------\n`;
+            text += `TOTAL TAGIHAN: Rp ${totalBelanja.toLocaleString('id-ID')}\n`;
             
             if (uangBayar > 0) {
-                text += "[R]TUNAI    : Rp " + uangBayar.toLocaleString('id-ID') + "\n";
+                text += `Tunai: Rp ${uangBayar.toLocaleString('id-ID')}\n`;
                 let kembali = uangBayar - totalBelanja;
-                text += "[R]KEMBALI : Rp " + (kembali > 0 ? kembali : 0).toLocaleString('id-ID') + "\n";
+                text += `Kembali: Rp ${kembali > 0 ? kembali.toLocaleString('id-ID') : 0}\n`;
             }
 
-            text += "[C]--------------------------------\n";
-            text += "[C]Terima Kasih\n\n\n";
+            text += `--------------------------------\n`;
+            text += `Terima Kasih Telah Berbelanja!`;
 
-            const encodedText = encodeURIComponent(text);
-            window.location.href = "rawbt:text/" + encodedText;
-
-            orderNumber++;
-            localStorage.setItem('lastOrderNo', orderNumber);
-            updateOrderNoDisplay();
+            // Memanggil fitur bagikan bawaan HP (Android Share Sheet)
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Struk Belanja - ' + storeName,
+                        text: text,
+                    });
+                    orderNumber++;
+                    localStorage.setItem('lastOrderNo', orderNumber);
+                    updateOrderNoDisplay();
+                } catch (err) {
+                    console.log('Bagikan dibatalkan');
+                }
+            } else {
+                // Cadangan jika browser tidak mendukung navigator.share
+                alert("Fitur bagikan otomatis tidak didukung di browser ini. Silakan gunakan tombol WhatsApp.");
+            }
         }
 
         // --- FITUR BAGIKAN KE WHATSAPP ---
@@ -522,7 +528,6 @@
 
             waText += `\n_Terima kasih telah berbelanja!_ 🙏`;
 
-            // Buka aplikasi WhatsApp dengan membawa teks
             const whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waText);
             window.open(whatsappUrl, '_blank');
 
