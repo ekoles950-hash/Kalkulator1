@@ -79,16 +79,13 @@
                     </div>
                 </div>
 
-                <!-- Tombol Aksi (Reset, Cetak/Bagikan Universal, WhatsApp) -->
-                <div class="grid grid-cols-5 gap-1.5 mt-1.5">
-                    <button onclick="resetCart()" class="tap-effect bg-red-100 text-red-700 py-2 rounded-lg font-bold text-[11px] border border-red-200 hover:bg-red-200">
+                <!-- Tombol Aksi (Reset & Cetak) -->
+                <div class="grid grid-cols-3 gap-2 mt-1.5">
+                    <button onclick="resetCart()" class="tap-effect bg-red-100 text-red-700 py-2.5 rounded-lg font-bold text-xs border border-red-200 hover:bg-red-200">
                         Reset
                     </button>
-                    <button onclick="shareStrukUniversal()" class="col-span-2 tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex items-center justify-center gap-1">
-                        🖨️ Cetak / Bagikan
-                    </button>
-                    <button onclick="shareWhatsApp()" class="col-span-2 tap-effect bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-emerald-700 flex items-center justify-center gap-1">
-                        💬 WhatsApp
+                    <button onclick="shareStrukUniversal()" class="col-span-2 tap-effect bg-green-600 text-white py-2.5 rounded-lg font-bold text-sm shadow-md hover:bg-green-700 flex items-center justify-center gap-1.5">
+                        🖨️ Cetak Struk
                     </button>
                 </div>
             </div>
@@ -512,42 +509,6 @@
                 localStorage.setItem('lastOrderNo', orderNumber);
                 updateOrderNoDisplay();
             }
-        }
-
-        // --- FITUR BAGIKAN KE WHATSAPP ---
-        function shareWhatsApp() {
-            if (Object.keys(cart).length === 0) {
-                alert("Keranjang masih kosong!");
-                return;
-            }
-
-            let waText = `*${storeName}*\n_${storeLocation}_\n\n`;
-            waText += `📦 *No Pesanan:* #${orderNumber}\n`;
-            waText += `🕒 *Waktu:* ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID').substring(0,5)}\n`;
-            waText += `--------------------------------\n`;
-
-            for (let name in cart) {
-                let item = cart[name];
-                waText += `▪️ ${name} (${item.qty}x @${item.price.toLocaleString('id-ID')}) = *Rp ${item.subtotal.toLocaleString('id-ID')}*\n`;
-            }
-
-            waText += `--------------------------------\n`;
-            waText += `💰 *TOTAL TAGIHAN: Rp ${totalBelanja.toLocaleString('id-ID')}*\n`;
-
-            if (uangBayar > 0) {
-                waText += `💵 Tunai: Rp ${uangBayar.toLocaleString('id-ID')}\n`;
-                let kembali = uangBayar - totalBelanja;
-                waText += `🔄 Kembali: Rp ${kembali > 0 ? kembali.toLocaleString('id-ID') : 0}\n`;
-            }
-
-            waText += `\n_Terima kasih telah berbelanja!_ 🙏`;
-
-            const whatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waText);
-            window.open(whatsappUrl, '_blank');
-
-            orderNumber++;
-            localStorage.setItem('lastOrderNo', orderNumber);
-            updateOrderNoDisplay();
         }
 
         // --- LOGIKA TELEGRAM ---
