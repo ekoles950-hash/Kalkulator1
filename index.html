@@ -451,8 +451,8 @@
             }
         }
 
-        // --- FITUR CETAK / BAGIKAN UNIVERSAL (MEMUNCULKAN MENU SHARE ANDROID) ---
-        async function shareStrukUniversal() {
+        // --- SOLUSI AMAN WEBVIEW APK (RAWBT / PRINT / SHARE) ---
+        function shareStrukUniversal() {
             if (Object.keys(cart).length === 0) {
                 alert("Keranjang masih kosong!");
                 return;
@@ -485,21 +485,32 @@
             text += `    Terima Kasih Telah Berkunjung!\n`;
             text += `================================\n`;
 
-            // Memunculkan menu share sheet bawaan HP Android
+            // Coba jalankan share bawaan jika didukung WebView APK
             if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'Struk #' + orderNumber,
-                        text: text,
-                    });
+                navigator.share({
+                    title: 'Struk #' + orderNumber,
+                    text: text,
+                }).then(() => {
                     orderNumber++;
                     localStorage.setItem('lastOrderNo', orderNumber);
                     updateOrderNoDisplay();
-                } catch (err) {
-                    console.log('Bagikan dibatalkan');
-                }
+                }).catch((err) => {
+                    console.log('Share dibatalkan');
+                });
             } else {
-                alert("Fitur bagikan otomatis tidak didukung di browser ini.");
+                // Jika diblokir WebView, langsung alihkan ke RawBT Printer Bluetooth atau salin teks secara aman
+                try {
+                    const base64Str = btoa(unescape(encodeURIComponent(text)));
+                    window.location.href = "rawbt:base64," + base64Str;
+                } catch (e) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert("Struk berhasil disalin ke clipboard! Silakan tempel (paste) di aplikasi tujuan.");
+                    });
+                }
+
+                orderNumber++;
+                localStorage.setItem('lastOrderNo', orderNumber);
+                updateOrderNoDisplay();
             }
         }
 
