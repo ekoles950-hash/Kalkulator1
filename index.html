@@ -79,13 +79,13 @@
                     </div>
                 </div>
 
-                <!-- Tombol Aksi (Reset, Bagikan File Struk, WhatsApp) -->
+                <!-- Tombol Aksi (Reset, Cetak/Bagikan Universal, WhatsApp) -->
                 <div class="grid grid-cols-5 gap-1.5 mt-1.5">
                     <button onclick="resetCart()" class="tap-effect bg-red-100 text-red-700 py-2 rounded-lg font-bold text-[11px] border border-red-200 hover:bg-red-200">
                         Reset
                     </button>
-                    <button onclick="shareStrukFile()" class="col-span-2 tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex items-center justify-center gap-1">
-                        📎 Bagikan File
+                    <button onclick="shareStrukUniversal()" class="col-span-2 tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex items-center justify-center gap-1">
+                        🖨️ Cetak / Bagikan
                     </button>
                     <button onclick="shareWhatsApp()" class="col-span-2 tap-effect bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-emerald-700 flex items-center justify-center gap-1">
                         💬 WhatsApp
@@ -451,8 +451,8 @@
             }
         }
 
-        // --- FITUR BAGIKAN SEBAGAI FILE STRUK (.TXT) ---
-        async function shareStrukFile() {
+        // --- FITUR CETAK / BAGIKAN UNIVERSAL (MEMUNCULKAN MENU SHARE ANDROID) ---
+        async function shareStrukUniversal() {
             if (Object.keys(cart).length === 0) {
                 alert("Keranjang masih kosong!");
                 return;
@@ -485,32 +485,21 @@
             text += `    Terima Kasih Telah Berkunjung!\n`;
             text += `================================\n`;
 
-            const blob = new Blob([text], { type: 'text/plain' });
-            const file = new File([blob], `Struk-Pesanan-${orderNumber}.txt`, { type: 'text/plain' });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            // Memunculkan menu share sheet bawaan HP Android
+            if (navigator.share) {
                 try {
                     await navigator.share({
-                        files: [file],
-                        title: 'Struk Pesanan #' + orderNumber,
-                        text: 'Berikut struk belanja dari ' + storeName,
+                        title: 'Struk #' + orderNumber,
+                        text: text,
                     });
                     orderNumber++;
                     localStorage.setItem('lastOrderNo', orderNumber);
                     updateOrderNoDisplay();
                 } catch (err) {
-                    console.log('Bagikan file dibatalkan');
+                    console.log('Bagikan dibatalkan');
                 }
             } else {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `Struk-${orderNumber}.txt`;
-                link.click();
-                
-                alert("File struk berhasil diunduh ke HP Anda!");
-                orderNumber++;
-                localStorage.setItem('lastOrderNo', orderNumber);
-                updateOrderNoDisplay();
+                alert("Fitur bagikan otomatis tidak didukung di browser ini.");
             }
         }
 
