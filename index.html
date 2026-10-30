@@ -173,11 +173,23 @@
                     <h4 class="font-bold text-gray-700">Tambah Menu Produk</h4>
                     <div>
                         <label class="block text-[10px] text-gray-500 font-bold mb-1">Nama Produk:</label>
-                        <input type="text" id="newProductName" placeholder="Contoh: Kopi Hitam" class="w-full bg-white border border-gray-300 p-2 rounded text-xs">
+                        <input type="text" id="newProductName" placeholder="Contoh: Kopi / Mie Ayam" class="w-full bg-white border border-gray-300 p-2 rounded text-xs">
                     </div>
                     <div>
                         <label class="block text-[10px] text-gray-500 font-bold mb-1">Harga (Rp):</label>
                         <input type="number" id="newProductPrice" placeholder="Contoh: 4000" class="w-full bg-white border border-gray-300 p-2 rounded text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">Warna Tombol:</label>
+                        <select id="newProductColor" class="w-full bg-white border border-gray-300 p-2 rounded text-xs font-bold">
+                            <option value="bg-amber-800 text-white">Cokelat (Kopi/Minuman)</option>
+                            <option value="bg-yellow-500 text-black">Kuning (Mie/Makanan)</option>
+                            <option value="bg-blue-600 text-white">Biru</option>
+                            <option value="bg-red-600 text-white">Merah</option>
+                            <option value="bg-emerald-600 text-white">Hijau</option>
+                            <option value="bg-indigo-600 text-white">Ungu / Indigo</option>
+                            <option value="bg-white text-gray-800 border-gray-300">Putih Neutral</option>
+                        </select>
                     </div>
                     <button onclick="addNewProduct()" class="w-full bg-green-600 text-white py-2 rounded font-bold tap-effect hover:bg-green-700">+ Tambah Produk</button>
                 </div>
@@ -203,12 +215,10 @@
         let totalBelanja = 0;
         let uangBayar = 0;
 
-        // Ambil data toko & menu dari LocalStorage (jika kosong, pakai default kosong)
         let storeName = localStorage.getItem('storeName') || "Toko / Warung Saya";
         let storeLocation = localStorage.getItem('storeLocation') || "Silakan Atur di Pengaturan";
         let customProducts = JSON.parse(localStorage.getItem('customProducts')) || [];
         
-        // Konfigurasi Telegram Pembeli
         let teleToken = localStorage.getItem('teleToken') || "";
         let teleChatId = localStorage.getItem('teleChatId') || "";
 
@@ -244,11 +254,13 @@
 
             customProducts.forEach((item, index) => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border border-gray-200 text-gray-800 shadow-sm tap-effect relative p-1 rounded-lg hover:shadow flex flex-col items-center justify-center h-16 w-full transition-all hover:border-blue-400";
+                const colorClass = item.color || "bg-white text-gray-800 border-gray-300";
+                
+                btn.className = `${colorClass} shadow-sm tap-effect relative p-1 rounded-lg hover:shadow flex flex-col items-center justify-center h-16 w-full transition-all border border-transparent hover:brightness-110`;
                 btn.onclick = () => addToCart(item);
                 btn.innerHTML = `
                     <span class="font-bold text-xs leading-tight text-center mb-0.5">${item.name}</span>
-                    <span class="text-[9px] font-mono text-amber-700 bg-amber-50 px-1 py-0.5 rounded border border-amber-200">Rp ${item.price.toLocaleString('id-ID')}</span>
+                    <span class="text-[9px] font-mono opacity-90 bg-black/20 px-1 py-0.5 rounded">Rp ${item.price.toLocaleString('id-ID')}</span>
                 `;
                 grid.appendChild(btn);
             });
@@ -394,13 +406,14 @@
         function addNewProduct() {
             const pName = document.getElementById('newProductName').value.trim();
             const pPrice = parseInt(document.getElementById('newProductPrice').value);
+            const pColor = document.getElementById('newProductColor').value;
 
             if (!pName || isNaN(pPrice) || pPrice <= 0) {
                 alert("Masukkan nama produk dan harga yang valid!");
                 return;
             }
 
-            customProducts.push({ name: pName, price: pPrice });
+            customProducts.push({ name: pName, price: pPrice, color: pColor });
             localStorage.setItem('customProducts', JSON.stringify(customProducts));
 
             document.getElementById('newProductName').value = "";
@@ -437,7 +450,7 @@
             }
         }
 
-        // --- LOGIKA RAWBT ---
+        // --- PERBAIKAN LOGIKA RAWBT PRINTER BLUETOOTH ---
         function printRawBT() {
             if (Object.keys(cart).length === 0) {
                 alert("Keranjang masih kosong!");
@@ -472,8 +485,16 @@
             text += "[C]--------------------------------\n";
             text += "[C]Terima Kasih\n\n\n";
 
-            const base64Str = btoa(text);
-            window.location.href = "rawbt:base64," + base64Str;
+            // Menggunakan URI Scheme RawBT yang lebih kompatibel dengan aplikasi RawBT Android
+            const encodedText = encodeURIComponent(text);
+            const rawbtUrl = "intent:#Intent;scheme=rawbt;package=ru.a404m.rawbt;S.href=" + encodedText + ";end";
+
+            // Coba buka aplikasi RawBT langsung via Intent Android
+            try {
+                window.location.href = "rawbt:text/" + encodedText;
+            } catch(e) {
+                window.location.href = rawbtUrl;
+            }
 
             orderNumber++;
             localStorage.setItem('lastOrderNo', orderNumber);
