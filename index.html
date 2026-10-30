@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kasir Basecamp Coffee</title>
+    <title id="pageTitle">Kasir Basecamp Coffee</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +13,6 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .tap-effect:active { transform: scale(0.95); transition: transform 0.1s; }
         
-        /* Input styling */
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -26,12 +25,21 @@
     <!-- Header -->
     <header class="shrink-0 bg-amber-900 text-white p-2 px-4 shadow-md flex justify-between items-center z-10">
         <div>
-            <h1 class="text-lg font-bold">Basecamp Coffee</h1>
-            <p class="text-[10px] text-amber-200">Grogol - Pejawaran</p>
+            <h1 class="text-lg font-bold" id="storeNameDisplay">Basecamp Coffee</h1>
+            <p class="text-[10px] text-amber-200" id="storeLocationDisplay">Grogol - Pejawaran</p>
         </div>
-        <div class="text-right">
-            <p class="text-[10px] opacity-80">No Pesanan</p>
-            <p class="font-mono font-bold text-base" id="orderNo">#---</p>
+        <div class="flex items-center gap-3">
+            <div class="text-right">
+                <p class="text-[10px] opacity-80">No Pesanan</p>
+                <p class="font-mono font-bold text-base" id="orderNo">#---</p>
+            </div>
+            <!-- Tombol Pengaturan -->
+            <button onclick="openSettings()" class="bg-amber-800 p-2 rounded-lg border border-amber-700 tap-effect hover:bg-amber-700 text-amber-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
         </div>
     </header>
 
@@ -40,25 +48,21 @@
         
         <!-- Kolom Kiri: Keranjang & Pembayaran -->
         <div class="flex-[0.8] flex flex-col bg-white border-r border-gray-200 lg:max-w-sm relative z-0">
-            <!-- Header Struk -->
             <div class="p-1.5 bg-gray-50 border-b border-gray-200 text-center receipt-font text-[10px] text-gray-500 font-bold tracking-wider shrink-0">
                 KERANJANG PESANAN
             </div>
 
-            <!-- List Item -->
             <div class="flex-1 overflow-y-auto p-2 space-y-1.5 no-scrollbar" id="cartList">
                 <!-- Item masuk ke sini -->
             </div>
 
             <!-- Panel Pembayaran -->
             <div class="p-2.5 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10 shrink-0">
-                <!-- Total -->
                 <div class="flex justify-between items-end mb-2 border-b border-dashed border-gray-300 pb-1.5">
                     <span class="text-gray-600 text-xs font-semibold">Total Tagihan</span>
                     <span class="text-2xl font-extrabold text-amber-900" id="totalDisplay">Rp 0</span>
                 </div>
 
-                <!-- Fitur Uang Bayar -->
                 <div class="mb-2">
                     <div class="text-[10px] font-bold text-gray-500 mb-1">UANG DITERIMA:</div>
                     <div class="flex gap-1 mb-1.5">
@@ -75,7 +79,6 @@
                     </div>
                 </div>
 
-                <!-- Tombol Aksi -->
                 <div class="grid grid-cols-4 gap-2 mt-1.5">
                     <button onclick="resetCart()" class="col-span-1 tap-effect bg-red-100 text-red-700 py-2 rounded-lg font-bold text-xs border border-red-200 hover:bg-red-200">
                         Reset
@@ -103,8 +106,6 @@
 
     <!-- Footer: Laporan Keuangan Manual ke Telegram -->
     <div class="shrink-0 bg-slate-800 p-2 shadow-[0_-4px_10px_rgba(0,0,0,0.2)] z-20 flex flex-col gap-1 w-full safe-area-bottom">
-        
-        <!-- Baris Pilihan Penjaga & Label Pemasukan -->
         <div class="flex justify-between items-center ml-1 mr-1">
             <div class="text-amber-300 text-[11px] font-bold tracking-wide">
                 Pemasukan hari ini!
@@ -118,17 +119,10 @@
             </div>
         </div>
         
-        <!-- Input & Tombol Bersebelahan -->
         <div class="flex gap-2 w-full items-center">
-            
             <div class="flex-1 flex items-center bg-slate-700 rounded-lg overflow-hidden border border-slate-600 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all h-10">
                 <span class="pl-2.5 pr-1.5 text-slate-400 font-bold text-sm">Rp</span>
-                <input 
-                    type="number" 
-                    id="inputPemasukan" 
-                    placeholder="Nominal..." 
-                    class="w-full h-full bg-transparent text-white pr-2 outline-none font-bold text-sm"
-                >
+                <input type="number" id="inputPemasukan" placeholder="Nominal..." class="w-full h-full bg-transparent text-white pr-2 outline-none font-bold text-sm">
             </div>
 
             <button onclick="kirimTelegramManual()" id="btnKirimTelegram" class="tap-effect h-10 bg-blue-500 text-white px-4 rounded-lg text-sm font-bold shadow-md hover:bg-blue-600 flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap">
@@ -137,13 +131,65 @@
                 </svg>
                 Kirim
             </button>
+        </div>
+    </div>
 
+    <!-- MODAL PENGATURAN (SETTINGS) -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="bg-amber-900 text-white p-3 px-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm">⚙️ Pengaturan Toko & Menu</h3>
+                <button onclick="closeSettings()" class="text-amber-200 hover:text-white font-bold text-lg">✕</button>
+            </div>
+            
+            <div class="p-4 overflow-y-auto space-y-4 flex-1 text-xs">
+                <!-- Ubah Identitas Toko -->
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                    <h4 class="font-bold text-gray-700">Identitas Toko</h4>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">Nama Warung / Toko:</label>
+                        <input type="text" id="inputStoreName" class="w-full bg-white border border-gray-300 p-2 rounded text-xs font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">Lokasi / Keterangan:</label>
+                        <input type="text" id="inputStoreLocation" class="w-full bg-white border border-gray-300 p-2 rounded text-xs font-semibold">
+                    </div>
+                    <button onclick="saveStoreInfo()" class="w-full bg-amber-900 text-white py-2 rounded font-bold tap-effect hover:bg-amber-800">Simpan Identitas</button>
+                </div>
+
+                <!-- Tambah Produk Baru -->
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                    <h4 class="font-bold text-gray-700">Tambah Menu Produk Baru</h4>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">Nama Produk:</label>
+                        <input type="text" id="newProductName" placeholder="Contoh: Es Teh" class="w-full bg-white border border-gray-300 p-2 rounded text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-500 font-bold mb-1">Harga (Rp):</label>
+                        <input type="number" id="newProductPrice" placeholder="Contoh: 3000" class="w-full bg-white border border-gray-300 p-2 rounded text-xs">
+                    </div>
+                    <button onclick="addNewProduct()" class="w-full bg-green-600 text-white py-2 rounded font-bold tap-effect hover:bg-green-700">+ Tambah ke Menu</button>
+                </div>
+
+                <!-- Daftar Produk Tambahan & Reset -->
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                    <h4 class="font-bold text-gray-700">Kelola Produk Tambahan</h4>
+                    <div id="customProductList" class="space-y-1 max-h-32 overflow-y-auto">
+                        <!-- List produk custom muncul disini -->
+                    </div>
+                    <button onclick="resetDefaultMenu()" class="w-full bg-red-100 text-red-600 py-1.5 rounded font-bold text-[10px] border border-red-200 hover:bg-red-200">Reset ke Menu Default</button>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-gray-100 border-t border-gray-200 text-right">
+                <button onclick="closeSettings()" class="bg-gray-700 text-white px-4 py-2 rounded font-bold text-xs">Tutup</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- KONFIGURASI MENU ---
-        const menuItems = [
+        // --- DATA MENU DEFAULT ---
+        const defaultMenuItems = [
             { name: "Kopi", price: 4000, color: "bg-amber-800 text-white" },
             { name: "Tron", price: 1000, color: "bg-blue-600 text-white" },
             { name: "Rokok Moca", price: 2000, color: "bg-gray-700 text-white" },
@@ -154,7 +200,7 @@
             { name: "Mie", price: 6000, color: "bg-yellow-400 text-black border border-yellow-500" },
             { name: "Ps", price: 5000, color: "bg-indigo-600 text-white" },
             { name: "Rokok Ilegal", price: 1000, color: "bg-stone-800 text-white" },
-            { name: "surya ", price: 2500, color: "bg-white text-gray-800 border-gray-300" }, 
+            { name: "surya", price: 2500, color: "bg-white text-gray-800 border-gray-300" }, 
             { name: "mie telor", price: 7500, color: "bg-white text-gray-800 border-gray-300" }  
         ];
 
@@ -167,23 +213,41 @@
         let totalBelanja = 0;
         let uangBayar = 0;
 
+        // Ambil data toko & menu dari LocalStorage jika ada
+        let storeName = localStorage.getItem('storeName') || "Basecamp Coffee";
+        let storeLocation = localStorage.getItem('storeLocation') || "Grogol - Pejawaran";
+        let customProducts = JSON.parse(localStorage.getItem('customProducts')) || [];
+
         document.addEventListener('DOMContentLoaded', () => {
+            applyStoreInfo();
             renderMenu();
             updateOrderNoDisplay();
             renderCart();
         });
 
+        function applyStoreInfo() {
+            document.getElementById('storeNameDisplay').innerText = storeName;
+            document.getElementById('storeLocationDisplay').innerText = storeLocation;
+            document.getElementById('pageTitle').innerText = "Kasir " + storeName;
+        }
+
         function updateOrderNoDisplay() {
             document.getElementById('orderNo').innerText = `#${orderNumber}`;
+        }
+
+        // Gabungkan menu default + menu buatan pembeli sendiri
+        function getAllMenuItems() {
+            return [...defaultMenuItems, ...customProducts];
         }
 
         function renderMenu() {
             const grid = document.getElementById('menuGrid');
             grid.innerHTML = '';
+            const allMenu = getAllMenuItems();
 
-            menuItems.forEach(item => {
+            allMenu.forEach((item, index) => {
                 const btn = document.createElement('button');
-                const colorClass = item.color || 'bg-white text-gray-800 border-gray-300';
+                const colorClass = item.color || 'bg-white text-gray-800 border-gray-300 shadow-sm';
                 
                 btn.className = `${colorClass} tap-effect relative p-1 rounded-lg shadow-sm hover:shadow flex flex-col items-center justify-center h-16 w-full transition-all border border-transparent hover:brightness-110`;
                 btn.onclick = () => addToCart(item);
@@ -276,7 +340,7 @@
                 totalBelanja += data.subtotal;
                 
                 const row = document.createElement('div');
-                row.className = "flex justify-between items-center bg-white p-2 rounded-md border border-gray-100 shadow-sm animate-fade-in";
+                row.className = "flex justify-between items-center bg-white p-2 rounded-md border border-gray-100 shadow-sm";
                 row.innerHTML = `
                     <div class="flex-1">
                         <div class="font-bold text-gray-800 text-xs">${name}</div>
@@ -302,6 +366,89 @@
             }
         }
 
+        // --- PENGATURAN / MODAL LOGIC ---
+        function openSettings() {
+            document.getElementById('inputStoreName').value = storeName;
+            document.getElementById('inputStoreLocation').value = storeLocation;
+            renderCustomProductList();
+            document.getElementById('settingsModal').classList.remove('hidden');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.add('hidden');
+        }
+
+        function saveStoreInfo() {
+            const sName = document.getElementById('inputStoreName').value.trim();
+            const sLoc = document.getElementById('inputStoreLocation').value.trim();
+            if (!sName) { alert("Nama toko tidak boleh kosong!"); return; }
+
+            storeName = sName;
+            storeLocation = sLoc;
+            localStorage.setItem('storeName', storeName);
+            localStorage.setItem('storeLocation', storeLocation);
+
+            applyStoreInfo();
+            alert("Identitas toko berhasil diperbarui!");
+        }
+
+        function addNewProduct() {
+            const pName = document.getElementById('newProductName').value.trim();
+            const pPrice = parseInt(document.getElementById('newProductPrice').value);
+
+            if (!pName || isNaN(pPrice) || pPrice <= 0) {
+                alert("Masukkan nama produk dan harga yang valid!");
+                return;
+            }
+
+            customProducts.push({ name: pName, price: pPrice, color: "bg-emerald-700 text-white" });
+            localStorage.setItem('customProducts', JSON.stringify(customProducts));
+
+            document.getElementById('newProductName').value = "";
+            document.getElementById('newProductPrice').value = "";
+
+            renderMenu();
+            renderCustomProductList();
+            alert("Produk berhasil ditambahkan ke menu!");
+        }
+
+        function renderCustomProductList() {
+            const listEl = document.getElementById('customProductList');
+            if (customProducts.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-400 italic text-[10px]">Belum ada produk tambahan.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            customProducts.forEach((p, idx) => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center bg-white p-1.5 rounded border border-gray-200 text-xs";
+                div.innerHTML = `
+                    <span><b>${p.name}</b> (Rp ${p.price.toLocaleString('id-ID')})</span>
+                    <button onclick="deleteCustomProduct(${idx})" class="text-red-500 font-bold px-2 py-0.5 bg-red-50 rounded border border-red-200">Hapus</button>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+
+        function deleteCustomProduct(index) {
+            if (confirm(`Hapus produk "${customProducts[index].name}"?`)) {
+                customProducts.splice(index, 1);
+                localStorage.setItem('customProducts', JSON.stringify(customProducts));
+                renderMenu();
+                renderCustomProductList();
+            }
+        }
+
+        function resetDefaultMenu() {
+            if (confirm("Kembalikan menu ke default awal dan hapus semua menu tambahan?")) {
+                customProducts = [];
+                localStorage.removeItem('customProducts');
+                renderMenu();
+                renderCustomProductList();
+                alert("Menu direset!");
+            }
+        }
+
         // --- LOGIKA RAWBT ---
         function printRawBT() {
             if (Object.keys(cart).length === 0) {
@@ -315,9 +462,8 @@
 
             let text = "";
 
-            text += "[C]<b>Basecamp coffee</b>\n";
-            text += "[C]Grogol\n";
-            text += "[C]Pejawaran\n";
+            text += "[C]<b>" + storeName + "</b>\n";
+            text += "[C]" + storeLocation + "\n";
             text += "[L]\n";
             text += "[L]No pesanan: " + orderNumber + "\n";
             text += "[L]Tanggal: " + new Date().toLocaleDateString('id-ID') + " " + new Date().toLocaleTimeString('id-ID').substring(0,5) + "\n";
@@ -332,10 +478,10 @@
             }
 
             text += "[C]--------------------------------\n";
-            text += "[R]<b>TOTAL   : Rp " + totalBelanja.toLocaleString('id-ID') + "</b>\n";
+            text += "[R]<b>TOTAL    : Rp " + totalBelanja.toLocaleString('id-ID') + "</b>\n";
             
             if (uangBayar > 0) {
-                text += "[R]TUNAI   : Rp " + uangBayar.toLocaleString('id-ID') + "\n";
+                text += "[R]TUNAI    : Rp " + uangBayar.toLocaleString('id-ID') + "\n";
                 let kembali = uangBayar - totalBelanja;
                 text += "[R]KEMBALI : Rp " + (kembali > 0 ? kembali : 0).toLocaleString('id-ID') + "\n";
             }
@@ -386,10 +532,9 @@
                 hour: '2-digit', minute: '2-digit'
             });
 
-            // Format Pesan Telegram yang baru (tambah Nama Penjaga)
             const pesan = `
 📊 *LAPORAN PEMASUKAN MANUAL*
-🏠 *Basecamp Coffee*
+🏠 *${storeName}* (${storeLocation})
 
 👤 *Penjaga:* ${namaPenjaga}
 💰 *Nominal:* Rp ${nominal.toLocaleString('id-ID')}
@@ -427,7 +572,6 @@ _Laporan dikirim dari Aplikasi Kasir_`;
                 btn.classList.remove("opacity-70", "cursor-not-allowed");
             }
         }
-
     </script>
 </body>
 </html>
