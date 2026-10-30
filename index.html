@@ -79,13 +79,13 @@
                     </div>
                 </div>
 
-                <!-- Tombol Aksi (Reset, Cetak/Bagikan Universal, WhatsApp) -->
+                <!-- Tombol Aksi (Reset, Bagikan File Struk, WhatsApp) -->
                 <div class="grid grid-cols-5 gap-1.5 mt-1.5">
                     <button onclick="resetCart()" class="tap-effect bg-red-100 text-red-700 py-2 rounded-lg font-bold text-[11px] border border-red-200 hover:bg-red-200">
                         Reset
                     </button>
-                    <button onclick="shareStrukUniversal()" class="col-span-2 tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex items-center justify-center gap-1">
-                        🖨️ Cetak / Bagikan
+                    <button onclick="shareStrukFile()" class="col-span-2 tap-effect bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-green-700 flex items-center justify-center gap-1">
+                        📎 Bagikan File
                     </button>
                     <button onclick="shareWhatsApp()" class="col-span-2 tap-effect bg-emerald-600 text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-emerald-700 flex items-center justify-center gap-1">
                         💬 WhatsApp
@@ -451,52 +451,66 @@
             }
         }
 
-        // --- FITUR CETAK / BAGIKAN UNIVERSAL (ANDROID SHARE SHEET) ---
-        async function shareStrukUniversal() {
+        // --- FITUR BAGIKAN SEBAGAI FILE STRUK (.TXT) ---
+        async function shareStrukFile() {
             if (Object.keys(cart).length === 0) {
                 alert("Keranjang masih kosong!");
                 return;
             }
 
-            let text = `=== ${storeName} ===\n`;
-            text += `${storeLocation}\n\n`;
-            text += `No Pesanan: #${orderNumber}\n`;
-            text += `Tanggal: ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID').substring(0,5)}\n`;
+            let text = `================================\n`;
+            text += `        ${storeName.toUpperCase()}\n`;
+            text += `     ${storeLocation}\n`;
+            text += `================================\n`;
+            text += `No Pesanan : #${orderNumber}\n`;
+            text += `Tanggal    : ${new Date().toLocaleDateString('id-ID')} ${new Date().toLocaleTimeString('id-ID').substring(0,5)}\n`;
             text += `--------------------------------\n`;
 
             for (let name in cart) {
                 let item = cart[name];
-                text += `${name} (${item.qty}x @${item.price.toLocaleString('id-ID')}) = Rp ${item.subtotal.toLocaleString('id-ID')}\n`;
+                text += `${name}\n`;
+                text += `  ${item.qty}x @ Rp ${item.price.toLocaleString('id-ID')} = Rp ${item.subtotal.toLocaleString('id-ID')}\n`;
             }
 
             text += `--------------------------------\n`;
-            text += `TOTAL TAGIHAN: Rp ${totalBelanja.toLocaleString('id-ID')}\n`;
+            text += `TOTAL TAGIHAN : Rp ${totalBelanja.toLocaleString('id-ID')}\n`;
             
             if (uangBayar > 0) {
-                text += `Tunai: Rp ${uangBayar.toLocaleString('id-ID')}\n`;
+                text += `TUNAI         : Rp ${uangBayar.toLocaleString('id-ID')}\n`;
                 let kembali = uangBayar - totalBelanja;
-                text += `Kembali: Rp ${kembali > 0 ? kembali.toLocaleString('id-ID') : 0}\n`;
+                text += `KEMBALI       : Rp ${kembali > 0 ? kembali.toLocaleString('id-ID') : 0}\n`;
             }
 
-            text += `--------------------------------\n`;
-            text += `Terima Kasih Telah Berbelanja!`;
+            text += `================================\n`;
+            text += `    Terima Kasih Telah Berkunjung!\n`;
+            text += `================================\n`;
 
-            // Memanggil fitur bagikan bawaan HP (Android Share Sheet)
-            if (navigator.share) {
+            const blob = new Blob([text], { type: 'text/plain' });
+            const file = new File([blob], `Struk-Pesanan-${orderNumber}.txt`, { type: 'text/plain' });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
                     await navigator.share({
-                        title: 'Struk Belanja - ' + storeName,
-                        text: text,
+                        files: [file],
+                        title: 'Struk Pesanan #' + orderNumber,
+                        text: 'Berikut struk belanja dari ' + storeName,
                     });
                     orderNumber++;
                     localStorage.setItem('lastOrderNo', orderNumber);
                     updateOrderNoDisplay();
                 } catch (err) {
-                    console.log('Bagikan dibatalkan');
+                    console.log('Bagikan file dibatalkan');
                 }
             } else {
-                // Cadangan jika browser tidak mendukung navigator.share
-                alert("Fitur bagikan otomatis tidak didukung di browser ini. Silakan gunakan tombol WhatsApp.");
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `Struk-${orderNumber}.txt`;
+                link.click();
+                
+                alert("File struk berhasil diunduh ke HP Anda!");
+                orderNumber++;
+                localStorage.setItem('lastOrderNo', orderNumber);
+                updateOrderNoDisplay();
             }
         }
 
